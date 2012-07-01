@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'srs/cli'
+rescue LoadError
+  require 'rubygems'
+  require 'srs/cli'
+end
+
+exit SRS::CLI.run!(*ARGV)
+
