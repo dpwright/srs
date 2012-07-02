@@ -17,7 +17,6 @@ module SRS
 
 		def self.create(dirname, force=false)
 			dotsrs_dir = File.join(dirname,'.srs/')
-			config_file = File.join(dotsrs_dir,'config')
 
 			if( SRS::Workspace.initialised?(dirname) ) then
 				raise AlreadyInitialisedError
@@ -32,16 +31,13 @@ module SRS
 			end
 
 			Dir.mkdir(dotsrs_dir)
-			File.new(config_file, "w")
+			Dir.mkdir("data")
 
 			return SRS::Workspace.new(dirname)
 		end
 
-		def self.initialised?(dirname)
-			dotsrs_dir = File.join(dirname,'.srs/')
-			config_file = File.join(dotsrs_dir,'config')
-
-			return File.exists?(config_file)
+		def self.initialised?(dirname=".")
+			Dir.exists?(File.join(dirname,'.srs/'))
 		end
 	end
 end
