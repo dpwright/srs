@@ -23,6 +23,7 @@ module SRS
 			def summary()
 				puts "    init"
 				puts "    add-data"
+				puts "    cat"
 				puts "    help"
 			end
 		end
