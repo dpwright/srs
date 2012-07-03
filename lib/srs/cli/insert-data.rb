@@ -3,7 +3,7 @@ require 'digest/sha1'
 
 module SRS
 	class CLI
-		class AddData
+		class InsertData
 			def run!(arguments)
 				if not SRS::Workspace.initialised? then
 					puts "Current directory is not an SRS Workspace"
@@ -30,8 +30,8 @@ module SRS
 				puts <<-EOF
 srs add-data
 
-Reads the contents from stdin and adds it to the workspace.  Returns the id used
-to access that data.
+Reads the contents from stdin and inserts it into the workspace.  Returns the id
+used to access that data.
 					EOF
 			end
 		end

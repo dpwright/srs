@@ -1,15 +1,15 @@
 require 'srs/cli/init'
 require 'srs/cli/help'
-require 'srs/cli/add-data'
+require 'srs/cli/insert-data'
 require 'srs/cli/cat'
 
 module SRS
 	class CLI
 		class << self
-			COMMANDS = { "init"     => :Init,
-			             "add-data" => :AddData,
-			             "cat"      => :Cat,
-			             "help"     => :Help }.freeze
+			COMMANDS = { "init"        => :Init,
+			             "insert-data" => :InsertData,
+			             "cat"         => :Cat,
+			             "help"        => :Help }.freeze
 
 			def cmd_to_symbol(command)
 				return COMMANDS[command]
