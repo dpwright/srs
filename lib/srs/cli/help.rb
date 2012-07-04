@@ -22,8 +22,7 @@ module SRS
 
 			def summary()
 				puts "    init"
-				puts "    insert-data"
-				puts "    insert-exercise"
+				puts "    insert-into"
 				puts "    cat"
 				puts "    help"
 			end

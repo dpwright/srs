@@ -1,15 +1,13 @@
 require 'srs/cli/init'
 require 'srs/cli/help'
-require 'srs/cli/insert-data'
-require 'srs/cli/insert-exercise'
+require 'srs/cli/insert-into'
 require 'srs/cli/cat'
 
 module SRS
 	class CLI
 		class << self
 			COMMANDS = { "init"            => :Init,
-			             "insert-data"     => :InsertData,
-			             "insert-exercise" => :InsertExercise,
+			             "insert-into"     => :InsertInto,
 			             "cat"             => :Cat,
 			             "help"            => :Help }.freeze
 
