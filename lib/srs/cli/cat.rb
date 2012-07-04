@@ -1,7 +1,7 @@
 module SRS
 	class CLI
 		class Cat
-			VALID_SECTIONS = ["data", "exercises", "schedule"].freeze
+			VALID_SECTIONS = ["data", "exercises"].freeze
 			def run!(arguments)
 				if not SRS::Workspace.initialised? then
 					puts "Current directory is not an SRS Workspace"
@@ -36,6 +36,4 @@ Outputs the content matching <id>
 		end
 	end
 end
-
-
 

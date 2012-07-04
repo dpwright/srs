@@ -4,7 +4,7 @@ require 'digest/sha1'
 module SRS
 	class CLI
 		class InsertInto
-			VALID_SECTIONS = ["data", "exercises", "schedule"].freeze
+			VALID_SECTIONS = ["data", "exercises"].freeze
 			def run!(arguments)
 				if not SRS::Workspace.initialised? then
 					puts "Current directory is not an SRS Workspace"
@@ -45,7 +45,4 @@ the id used to access that exercise.
 		end
 	end
 end
-
-
-
 
