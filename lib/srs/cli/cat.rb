@@ -1,6 +1,7 @@
 module SRS
 	class CLI
 		class Cat
+			VALID_SECTIONS = ["data", "exercises", "schedule"].freeze
 			def run!(arguments)
 				if not SRS::Workspace.initialised? then
 					puts "Current directory is not an SRS Workspace"
@@ -10,17 +11,19 @@ module SRS
 				sha1 = arguments.shift
 				sha1_start = sha1[0..1]
 				sha1_rest = sha1[2..-1]
-				datafile = "data/#{sha1_start}/#{sha1_rest}"
 
-				if not File.exists?(datafile) then
-					puts "No content with that ID exists"
-					return 4
+				VALID_SECTIONS.each do |section|
+					datafile = "#{section}/#{sha1_start}/#{sha1_rest}"
+					if File.exists?(datafile) then
+						contents = File.open(datafile, "r"){ |file| file.read }
+						puts contents
+
+						return 0
+					end
 				end
 
-				contents = File.open(datafile, "r"){ |file| file.read }
-				puts contents
-
-				return 0
+				puts "No content with that ID exists"
+				return 4
 			end
 
 			def help()
