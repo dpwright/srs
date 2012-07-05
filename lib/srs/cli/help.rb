@@ -24,6 +24,7 @@ module SRS
 				puts "    init"
 				puts "    insert-into"
 				puts "    schedule"
+				puts "    do-exercise"
 				puts "    cat"
 				puts "    help"
 			end

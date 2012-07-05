@@ -2,6 +2,7 @@ require 'srs/cli/init'
 require 'srs/cli/help'
 require 'srs/cli/insert-into'
 require 'srs/cli/schedule'
+require 'srs/cli/do-exercise'
 require 'srs/cli/cat'
 
 module SRS
@@ -10,6 +11,7 @@ module SRS
 			COMMANDS = { "init"            => :Init,
 			             "insert-into"     => :InsertInto,
 			             "schedule"        => :Schedule,
+			             "do-exercise"     => :DoExercise,
 			             "cat"             => :Cat,
 			             "help"            => :Help }.freeze
 
