@@ -7,6 +7,7 @@ require 'srs/cli/reschedule'
 require 'srs/cli/queue'
 require 'srs/cli/next-due'
 require 'srs/cli/next-new'
+require 'srs/cli/get-field'
 require 'srs/cli/cat'
 
 module SRS
@@ -20,6 +21,7 @@ module SRS
 			             "queue"           => :Queue,
 			             "next-due"        => :NextDue,
 			             "next-new"        => :NextNew,
+			             "get-field"       => :GetField,
 			             "cat"             => :Cat,
 			             "help"            => :Help }.freeze
 

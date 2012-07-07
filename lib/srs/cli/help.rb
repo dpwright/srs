@@ -29,6 +29,7 @@ module SRS
 				puts "    queue"
 				puts "    next-due"
 				puts "    next-new"
+				puts "    get-field"
 				puts "    cat"
 				puts "    help"
 			end
