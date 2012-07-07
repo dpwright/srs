@@ -27,6 +27,8 @@ module SRS
 				puts "    do-exercise"
 				puts "    reschedule"
 				puts "    queue"
+				puts "    next-due"
+				puts "    next-new"
 				puts "    cat"
 				puts "    help"
 			end
