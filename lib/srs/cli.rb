@@ -4,6 +4,7 @@ require 'srs/cli/insert-into'
 require 'srs/cli/schedule'
 require 'srs/cli/do-exercise'
 require 'srs/cli/reschedule'
+require 'srs/cli/queue'
 require 'srs/cli/cat'
 
 module SRS
@@ -14,6 +15,7 @@ module SRS
 			             "schedule"        => :Schedule,
 			             "do-exercise"     => :DoExercise,
 			             "reschedule"      => :Reschedule,
+			             "queue"           => :Queue,
 			             "cat"             => :Cat,
 			             "help"            => :Help }.freeze
 
