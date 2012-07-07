@@ -212,7 +212,7 @@ This time we'll try answering the question incorrectly:
     You scored: 0.0
 
 When you enter a wrong answer, the `SimpleFlashcard` doesn't attempt to judge
-for itself whether or not you were close to the write answer.  Instead, it shows
+for itself whether or not you were close to the right answer.  Instead, it shows
 you the correct answer and lets you specify how close you thought you were.  In
 this case, we were miles off, so we selected 'l', to fail the exercise
 completely.  Now to reschedule the exercise:
@@ -250,7 +250,7 @@ way we practised new exercises in the previous section:
     $ srs reschedule $SCHEDULE 1.0
     Exercise rescheduled for 2012-07-09 00:00:00 +0900
 
-In this case, since the exercise hard already been scheduled and was simply a
+In this case, since the exercise had already been scheduled and was simply a
 repetition of a failed exercise, the date matched that which was output
 previously.
 
