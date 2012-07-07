@@ -45,11 +45,11 @@ module SRS
 
 							case STDIN.gets().strip
 							when "h"
-								score = 3.0/3.0
+								score = 1.0
 							when "j"
-								score = 2.0/3.0
+								score = 0.8
 							when "k"
-								score = 1.0/3.0
+								score = 0.4
 							when "l"
 								score = 0.0
 							else
