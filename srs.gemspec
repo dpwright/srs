@@ -1,6 +1,8 @@
+require File.expand_path("../lib/srs/version", __FILE__)
+
 Gem::Specification.new do |s|
 	s.name         = 'srs'
-	s.version      = '0.1.1'
+	s.version      = SRS::VERSION
 	s.date         = '2011-07-07'
 	s.authors      = ["Daniel P. Wright"]
 	s.email        = 'dani@dpwright.com'
