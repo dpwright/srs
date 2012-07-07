@@ -26,11 +26,8 @@ module SRS
 							break
 						end
 
-						keyval = line.split(':').map{|e| e.strip}
-						key = keyval[0]
-						val = keyval[1]
-
-						headers[key] = val
+						key, *val = line.split(':').map{|e| e.strip}
+						headers[key] = val.join(':')
 					end
 					metadata = file.read
 				end
