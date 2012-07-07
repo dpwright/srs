@@ -10,13 +10,17 @@ module SRS
 				ws = SRS::Workspace.new
 
 				schedule = nil
-				File.open("#{ws.dotsrs}/QUEUED", "r") do |queued_file|
-					schedule = queued_file.gets
+				if File.exists? "#{ws.dotsrs}/QUEUED" then
+					File.open("#{ws.dotsrs}/QUEUED", "r") do |queued_file|
+						schedule = queued_file.gets
+					end
 				end
 
 				if schedule == nil then
-					File.open("#{ws.dotsrs}/REPEAT", "r") do |repeat_file|
-						schedule = repeat_file.gets
+					if File.exists? "#{ws.dotsrs}/REPEAT" then
+						File.open("#{ws.dotsrs}/REPEAT", "r") do |repeat_file|
+							schedule = repeat_file.gets
+						end
 					end
 				end
 
