@@ -58,6 +58,9 @@ module SRS
 					end
 				end
 
+				puts "Exercise rescheduled for #{headersOut["Due"]}"
+				puts "Exercise failed; marked for repetition" if headersOut["Repeat"]
+
 				return 0
 			end
 
