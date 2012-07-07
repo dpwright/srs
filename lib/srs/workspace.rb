@@ -1,3 +1,4 @@
+require 'fileutils'
 
 module SRS
 	class Workspace
@@ -23,6 +24,8 @@ module SRS
 				return nil
 			end
 
+			FileUtils.mkdir_p(dirname)
+
 			if( !force ) then
 				if( Dir.entries(dirname).length > 2 ) then
 					raise FolderNotEmptyError
@@ -31,7 +34,7 @@ module SRS
 			end
 
 			Dir.mkdir(dotsrs_dir)
-			Dir.mkdir("data")
+			Dir.mkdir(File.join(dirname, "data"))
 
 			return SRS::Workspace.new(dirname)
 		end
