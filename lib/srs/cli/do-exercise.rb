@@ -41,7 +41,7 @@ module SRS
 			def runModel(sha1, headers, metadata)
 				if not headers.has_key?("Model") then
 					puts "Exercise #{sha1} has no model!\n"
-					return 6
+					return nil
 				end
 
 				modelclass = headers.delete("Model")
@@ -53,14 +53,14 @@ module SRS
 						require "srs/models/#{modelclass}"
 					rescue LoadError
 						puts "Couldn't find model #{modelclass}."
-						return 7
+						return nil
 					end
 				end
 
 				model = SRS::Models.const_get(modelclass.to_sym).new
 				score = model.run(headers, metadata)
 
-				return score == nil ? 0 : score
+				return score
 			end
 
 			def help()
