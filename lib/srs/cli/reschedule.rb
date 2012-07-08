@@ -43,6 +43,7 @@ module SRS
 
 				exercise = headers.delete("Exercise")
 				schedulername = headers.delete("Scheduler")
+				was_repeat = (headers["Repeat"] == "true")
 
 				scheduler = getScheduler(schedulername)
 				headersOut = is_new ? scheduler.first_rep(score) : scheduler.rep(score, headers)
@@ -58,7 +59,12 @@ module SRS
 					end
 				end
 
-				puts "Exercise rescheduled for #{headersOut["Due"]}"
+				if not was_repeat then
+					puts "Exercise rescheduled for #{headersOut["Due"]}"
+				else
+					puts "Exercise passed; removed from repeats list" if not headersOut["Repeat"]
+				end
+
 				puts "Exercise failed; marked for repetition" if headersOut["Repeat"]
 
 				return 0
