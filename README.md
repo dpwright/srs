@@ -26,7 +26,13 @@ Usage
 
 This first release of `srs` is an _alpha_ release -- it is functionally
 complete, but the user interface is in its very early stages, documentation is
-lacking, and there may be bugs.  With that in mind, read on...
+lacking, and there may be bugs.  Since elements in the workspace format may
+change, it is not recommended to use this version for actual practice.  Treat it
+as a "sneak preview".  Version 0.2 is intended to be much closer to a final,
+usable system, so please watch the project for updates on when that version is
+released.
+
+With that in mind, read on...
 
 ### Initialising a workspace
 
@@ -51,7 +57,7 @@ inside it:
 
 In `srs`, a single item of practice or revision is called an _exercise_.  These
 can be anything -- a flashcard-style question-and-answer, or a more interactive
-form or practice.  What a particular exercise entails depends entirely on what
+form of practice.  What a particular exercise entails depends entirely on what
 it is you want to practice, and for that reason `srs` introduces the concept of
 _models_.
 
@@ -223,7 +229,7 @@ completely.  Now to reschedule the exercise:
 
 Since we failed the exercise, the scheduler has marked it for repetition.  This
 means that once we've finished all our scheduled reps for the day, we will be
-presented with this exercise (and any other failed exercise), to try again until
+presented with this exercise (and any other failed exercises), to try again until
 we have managed to pass them.  Note that only the first attempt affects the
 interval; subsequent repetitions are simply practice.
 
