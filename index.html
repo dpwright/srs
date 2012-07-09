@@ -1,0 +1,345 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>srs by dpwright</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">srs</h1>
+        <p class="header">A highly extensible command-line spaced repetition system</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/dpwright/srs/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/dpwright/srs/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/dpwright/srs">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/dpwright">dpwright</a></p>
+
+
+      </header>
+      <section>
+        <h1>srs</h1>
+
+<p>A Spaced Repetition System is a study tool which works by spacing out exercises
+so as to learn in the most efficient manner possible.  Further information can
+be found at the following Wikipedia pages:</p>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Spacing_effect">Spacing Effect</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Forgetting_curve">Forgetting Curve</a></li>
+<li><a href="http://en.wikipedia.org/wiki/Spaced_repetition">Spaced Repetition</a></li>
+</ul><p><code>srs</code> is a command-line based implementation of the spaced repetition system.  It
+is designed to be highly extensible and to promote the sharing of data for study
+by others.</p>
+
+<h2>Installation</h2>
+
+<p><code>srs</code> is distributed as a Gem.  Make sure you have Ruby and RubyGems installed,
+and then type:</p>
+
+<pre><code>$ gem install srs
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>This first release of <code>srs</code> is an <em>alpha</em> release -- it is functionally
+complete, but the user interface is in its very early stages, documentation is
+lacking, and there may be bugs.  Since elements in the workspace format may
+change, it is not recommended to use this version for actual practice.  Treat it
+as a "sneak preview".  Version 0.2 is intended to be much closer to a final,
+usable system, so please watch the project for updates on when that version is
+released.</p>
+
+<p>With that in mind, read on...</p>
+
+<h3>Initialising a workspace</h3>
+
+<p>The first thing you will want to do once you've installed <code>srs</code> is to initialise
+a <em>workspace</em>.  This is where all the data required for one set of material you
+want to study reside.  It is generally a good idea to group related items
+together -- for example, I have a workspace for Japanese vocabulary, another for
+kanji, and another for poetry and quotations which I'd like to remember.</p>
+
+<p>How you think the things you want to learn should be distributed is a
+personal choice, and you should consider for yourself what will work best for
+you.  For example, some people might prefer to put the Japanese vocabulary and
+the kanji together in one workspace -- that is fine.  Merging or splitting
+workspaces at a later stage is relatively easy, so do experiment!</p>
+
+<p>To initialise a workspace, create a directory and run the following command
+inside it:</p>
+
+<pre><code>$ srs init
+</code></pre>
+
+<h3>Adding an exercise</h3>
+
+<p>In <code>srs</code>, a single item of practice or revision is called an <em>exercise</em>.  These
+can be anything -- a flashcard-style question-and-answer, or a more interactive
+form of practice.  What a particular exercise entails depends entirely on what
+it is you want to practice, and for that reason <code>srs</code> introduces the concept of
+<em>models</em>.</p>
+
+<p>A model is a Ruby class which defines how an exercise is performed.  <code>srs</code> comes
+packaged with the most basic kind of model, a flashcard, which is distributed
+under the name <code>SimpleFlashcard</code>.  You can create your own models, but for now
+we'll make use of the <code>SimpleFlashcard</code> model to get something up and running
+quickly.</p>
+
+<p>A <code>SimpleFlashcard</code> exercise comes in two parts:</p>
+
+<ul>
+<li>The <em>data</em>, which usually contains the actual thing you want to test</li>
+<li>The <em>exercise specification</em>, which determines how to use that data.</li>
+</ul><p>This separation allows you to use the same data for multiple exercises.  In this
+example, we're going to create a "Production" and a "Recognition" card for the
+Japanese word, 勉強, which means "study".</p>
+
+<p>The first thing we need to do is create the DataFile.  <code>SimpleFlashcard</code>
+currently expects its data to consist of a series of key-value pairs, separated
+by a colon.  Currently multi-line fields are not supported, though this will
+change in a future version.  Run the following from inside the workspace
+directory you created (The ^D at the end signifies pressing Control-D to send
+the end-of-file marker to <code>srs</code>):</p>
+
+<pre><code>$ srs insert-into data
+Word: 勉強
+Pronunciation (Hiragana): べんきょう
+Pronunciation (Romaji): Benkyou
+Meaning: Study
+^Dc13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+</code></pre>
+
+<p>You should see the output after pressing ^D as above,
+<code>c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af</code>.  The string itself may be different,
+but it will be a long string of hexadecimal digits.  The <code>insert-into</code> command
+reads data in from STDIN and outputs an ID which can be used by other <code>srs</code>
+commands to access that data.</p>
+
+<p>We now have data containing four fields related to the word.  We can combine
+these fields in a variety of ways to generate a number of exercises.  Here we'll
+generate two; one to produce the English meaning when shown the word and the
+pronunciation; the other to produce the Japanese word when shown the English.
+Input the following, substituting the value passed into the <em>Data</em> field with
+whatever was output from the previous command:</p>
+
+<pre><code>$ srs insert-into exercises
+Data: c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+Model: SimpleFlashcard
+
+[Word]
+[Pronunciation (Hiragana)]
+---
+[Meaning]
+^D884bd92624411f5bb42ff9abdf84c3e09ba00cab
+</code></pre>
+
+<p>Note the blank line between the set of key-value pairs and the text below.
+<code>SimpleFlashcard</code> expects a series of headers, followed by a blank line,
+followed by some metadata.  The metadata is in two parts: the question, which is
+everything before the "---" string, and the answer, which is everything that
+comes after it.  Any words within square brackets are substituted with the value
+of their corresponding field in the data.</p>
+
+<p>As with the previous command, this command outputs an ID once it has completed.
+Remember this; you will need it later.  Let's add the second exercise:</p>
+
+<pre><code>$ srs insert-into exercises
+Data: c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+Model: SimpleFlashcard
+
+[Meaning]
+---
+[Word]
+^Dd930b3fce3d2f988758c7088ea77d9075b8c82bf
+</code></pre>
+
+<p>As you can see, this is just the same exercise, with the question and answer
+reversed.  Also, we are ignoring pronunciation for this one.</p>
+
+<p>You will notice, neither of these exercises make use of the "Pronunciation (Romaji)"
+field.  The truth is, I don't much like Romaji.  But it is entirely reasonable
+to add fields you won't use as part of the exercises to the data; you may choose
+to create exercises which make use of that data later, or you may just want to
+look it up (for example, you could include the link to a URL where you
+discovered the information).</p>
+
+<h3>Scheduling an exercise</h3>
+
+<p>The next thing we must do is schedule the exercises we've just created.  If we
+don't do this, they will never enter the <code>srs</code> scheduling system, and so they
+will simply sit there unasked!</p>
+
+<p>There have been a number of spaced repetition algorithms developed over the
+years, perhaps the most famous of which are the <a href="http://en.wikipedia.org/wiki/Graduated_interval_recall">Pimsleur Graduated Recall</a>
+and <a href="http://www.supermemo.com/english/ol/sm2.htm">SuperMemo 2</a> algorithms.  As with models, <code>srs</code> allows you to define
+your own custom spacing algorithm by creating a <em>scheduler</em>.  The base
+distribution comes with probably the most popular spacing algorithm
+pre-installed, SuperMemo 2.  We'll use that one.</p>
+
+<p>Type the following, substituting the two ids with the ones returned when you
+inserted the two exercises:</p>
+
+<pre><code>$ srs schedule -s SuperMemo2 884bd92624411f5bb42ff9abdf84c3e09ba00cab
+schedule/pending/20120708003132.386
+$ srs schedule -s SuperMemo2 d930b3fce3d2f988758c7088ea77d9075b8c82bf
+schedule/pending/20120708003149.754
+</code></pre>
+
+<h3>Doing some reps -- new exercises</h3>
+
+<p>Now that you've scheduled some exercises, you're ready to do some reps.  Let's
+ask <code>srs</code> what the next new exercise is which is available for learning:</p>
+
+<pre><code>$ srs next-new
+20120708003132.386
+</code></pre>
+
+<p>The ID of the first exercise you scheduled above should be output.  In order to
+actually test ourselves, we'll need the ID of the exercise we want to run.  We
+can get this from the <code>Exercise</code> field stored in the schedule (as always,
+remembering to substitute the example ID below with your own):</p>
+
+<pre><code>$ srs get-field exercise 20120708003132.386
+884bd92624411f5bb42ff9abdf84c3e09ba00cab
+</code></pre>
+
+<p>An exercise ID will be output, which we can feed straight into <code>do-exercise</code>:</p>
+
+<pre><code>$ srs do-exercise a884bd92624411f5bb42ff9abdf84c3e09ba00cab
+勉強
+べんきょう
+&gt;
+</code></pre>
+
+<p>At this point you are given a prompt.  Let's enter the correct answer, "Study",
+and see what happens:</p>
+
+<pre><code>&gt; Study
+Correct.
+You scored: 1.0
+</code></pre>
+
+<p>Scores in <code>srs</code> are normalised from 0-1, so 1.0 is a full score.  Well done!  We
+still need to enter this into the scheduler so that it knows when next to repeat
+the exercise.  Enter the following to reschedule the exercise.  The ID is the
+<em>schedule</em> ID, not the one for the exercise:</p>
+
+<pre><code>$ srs reschedule 20120708003132.386 1.0
+Exercise rescheduled for 2012-07-09 00:00:00 +0900
+</code></pre>
+
+<p>Excellent!  We'll see this exercise again tomorrow.</p>
+
+<p>It's actually possible to wrap up most of the above in a single line.  The
+following assumes you use a <code>bash</code> shell, though other shells may be similar:</p>
+
+<pre><code>$ SCHEDULE=$(srs next-new); EXERCISE=$(srs get-field exercise $SCHEDULE); srs do-exercise $EXERCISE
+</code></pre>
+
+<p>This time we'll try answering the question incorrectly:</p>
+
+<pre><code>Study
+&gt; 遊ぶ
+勉強
+Was your answer: [h] Correct, [j] Close, [k] Wrong, or [l] Very Wrong?
+&gt; l
+You scored: 0.0
+</code></pre>
+
+<p>When you enter a wrong answer, the <code>SimpleFlashcard</code> doesn't attempt to judge
+for itself whether or not you were close to the right answer.  Instead, it shows
+you the correct answer and lets you specify how close you thought you were.  In
+this case, we were miles off, so we selected 'l', to fail the exercise
+completely.  Now to reschedule the exercise:</p>
+
+<pre><code>$ srs reschedule $SCHEDULE 0.0
+Exercise rescheduled for 2012-07-09 00:00:00 +0900
+Exercise failed; marked for repetition
+</code></pre>
+
+<p>Since we failed the exercise, the scheduler has marked it for repetition.  This
+means that once we've finished all our scheduled reps for the day, we will be
+presented with this exercise (and any other failed exercises), to try again until
+we have managed to pass them.  Note that only the first attempt affects the
+interval; subsequent repetitions are simply practice.</p>
+
+<h3>Practice makes perfect!  Repeating exercises</h3>
+
+<p>For the most part, you're going to be practicing exercises you've already done
+once.  The flow for this is very similar to the above, except that instead of
+<code>next-new</code> we use the <code>next-due</code> command.</p>
+
+<p>Before we can use this command, however, we need to update the srs queue:</p>
+
+<pre><code>$ srs queue
+</code></pre>
+
+<p>This command tells <code>srs</code> to look through the schedules and determine which
+exercises are due for practice.  We can now use <code>next-due</code> similarly to the
+way we practised new exercises in the previous section:</p>
+
+<pre><code>$ SCHEDULE=$(srs next-due); EXERCISE=$(srs get-field exercise $SCHEDULE); srs do-exercise $EXERCISE
+Study
+&gt; 勉強
+Correct.
+You scored: 1.0
+
+$ srs reschedule $SCHEDULE 1.0
+Exercise rescheduled for 2012-07-09 00:00:00 +0900
+</code></pre>
+
+<p>In this case, since the exercise had already been scheduled and was simply a
+repetition of a failed exercise, the date matched that which was output
+previously.</p>
+
+<p>Finally, we can confirm that there are no more exercises left to practice:</p>
+
+<pre><code>$ srs queue
+$ srs next-due
+</code></pre>
+
+<h2>Contributing</h2>
+
+<p><code>srs</code> is in very early stages and as such there is a <em>lot</em> of work still to do
+on it.  Contributions are welcome!</p>
+
+<p>To contribute, fork the project on github and send me a pull request, or email
+me a patch.  Please bear the following in mind when making contributions:</p>
+
+<ul>
+<li>Try and keep individual commits small and self-contained.  If I feel like
+there is too much going on in a single commit, I may ask you to split it up
+into multiple commits.</li>
+<li>Please write clear, descriptive commit messages.  These should be formatted
+with a title of <code>&lt;=</code> 50 characters, and body text wrapped at 72 characters.
+I am quite particular about this.</li>
+<li>I come from a pretty heavy C++ background.  Ruby style corrections and
+improvements are very much appreciated!  Please be nice about it.</li>
+</ul><h2>Copyright</h2>
+
+<p>Copyright (c) 2012 Daniel P. Wright.</p>
+
+<p>This software is released under the Simplified BSD Licence.  See LICENCE.md for
+further details.</p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+		
+  </body>
+</html>
