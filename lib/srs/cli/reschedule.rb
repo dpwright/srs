@@ -67,6 +67,36 @@ module SRS
 
 				puts "Exercise failed; marked for repetition" if headersOut["Repeat"]
 
+				#Update queue files
+				ws = SRS::Workspace.new
+
+				lines = []
+				if File.exists? "#{ws.dotsrs}/QUEUED" then
+					File.open("#{ws.dotsrs}/QUEUED", "r") do |queued_file|
+						lines = File.readlines(queued_file).reject{|f| f == schedule_id}
+					end
+					File.open("#{ws.dotsrs}/QUEUED", "w") do |queued_file|
+						lines.each do |f|
+							queued_file.puts f
+						end
+					end
+				end
+
+				lines = []
+				if File.exists? "#{ws.dotsrs}/REPEAT" then
+					File.open("#{ws.dotsrs}/REPEAT", "r") do |queued_file|
+						lines = File.readlines(queued_file).reject{|f| f == schedule_id}
+					end
+				end
+
+				File.open("#{ws.dotsrs}/REPEAT", "w") do |queued_file|
+					lines.each do |f|
+						queued_file.puts f
+					end
+
+					queued_file.puts schedule_id if headersOut["Repeat"]
+				end
+
 				return 0
 			end
 
