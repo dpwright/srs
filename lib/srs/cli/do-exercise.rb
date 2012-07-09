@@ -1,3 +1,5 @@
+require 'require_all'
+
 module SRS
 	class CLI
 		class DoExercise
@@ -44,10 +46,10 @@ module SRS
 				modelclass = headers.delete("Model")
 
 				begin
-					require "./models/#{modelclass}"
+					require_all "models/#{modelclass}"
 				rescue LoadError
 					begin
-						require "srs/models/#{modelclass}"
+						require_rel "../models/#{modelclass}"
 					rescue LoadError
 						puts "Couldn't find model #{modelclass}."
 						return nil

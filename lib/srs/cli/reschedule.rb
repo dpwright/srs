@@ -102,10 +102,10 @@ module SRS
 
 			def getScheduler(schedulername)
 				begin
-					require "./schedulers/#{schedulername}"
+					require_all "schedulers/#{schedulername}"
 				rescue LoadError
 					begin
-						require "srs/schedulers/#{schedulername}"
+						require_rel "../schedulers/#{schedulername}"
 					rescue LoadError
 						puts "Couldn't find scheduler #{schedulername}."
 						return nil
