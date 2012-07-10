@@ -82,37 +82,36 @@ containing an element with the text for each field.  Run the following from
 inside the workspace directory you created (The ^D at the end signifies pressing
 Control-D to send the end-of-file marker to `srs`):
 
-    $ srs insert-into data
+    $ srs insert-into data 勉強
     <fields>
     	<Word>勉強</Word>
     	<Pronunciation_Hiragana>べんきょう</Pronunciation_Hiragana>
     	<Pronunciation_Romaji>Benkyou</Pronunciation_Romaji>
     	<Meaning>Study</Meaning>
     </fields>
-    ^Dc13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+    ^Ddata/勉強
 
-You should see the output after pressing ^D as above,
-`c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af`.  The string itself may be different,
-but it will be a long string of hexadecimal digits.  The `insert-into` command
-reads data in from STDIN and outputs an ID which can be used by other `srs`
-commands to access that data.
+You should see the output after pressing ^D as above, `data/勉強`.  The
+`insert-into` command reads data in from STDIN and places it in either the
+"data" or "exercises" section, giving it the ID passed as the second parameter.
+It outputs an absolute ID which can be used by other `srs` commands to access
+that data.
 
 We now have data containing four fields related to the word.  We can combine
 these fields in a variety of ways to generate a number of exercises.  Here we'll
 generate two; one to produce the English meaning when shown the word and the
 pronunciation; the other to produce the Japanese word when shown the English.
-Input the following, substituting the value passed into the _Data_ field with
-whatever was output from the previous command:
+Input the following:
 
-    $ srs insert-into exercises
-    Data: c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+    $ srs insert-into exercises 勉強.recognition
+    Data: 勉強
     Model: SimpleFlashcard
 
     [Word]
     [Pronunciation_Hiragana]
     ---
     [Meaning]
-    ^D884bd92624411f5bb42ff9abdf84c3e09ba00cab
+    ^Dexercises/勉強.recognition
 
 Note the blank line between the set of key-value pairs and the text below.
 `SimpleFlashcard` expects a series of headers, followed by a blank line,
@@ -121,17 +120,17 @@ everything before the "---" string, and the answer, which is everything that
 comes after it.  Any words within square brackets are substituted with the value
 of their corresponding field in the data.
 
-As with the previous command, this command outputs an ID once it has completed.
-Remember this; you will need it later.  Let's add the second exercise:
+As with the previous command, this command outputs the absolute ID once it has
+completed.  Let's add the second exercise:
 
-    $ srs insert-into exercises
-    Data: c13d1e790ef5e8ced8c96a37a6d014f08ddcb3af
+    $ srs insert-into exercises 勉強.production
+    Data: 勉強
     Model: SimpleFlashcard
 
     [Meaning]
     ---
     [Word]
-    ^Dd930b3fce3d2f988758c7088ea77d9075b8c82bf
+    ^Dexercises/勉強.production
 
 As you can see, this is just the same exercise, with the question and answer
 reversed.  Also, we are ignoring pronunciation for this one.
@@ -156,12 +155,15 @@ your own custom spacing algorithm by creating a _scheduler_.  The base
 distribution comes with probably the most popular spacing algorithm
 pre-installed, SuperMemo 2.  We'll use that one.
 
-Type the following, substituting the two ids with the ones returned when you
-inserted the two exercises:
+In the following two commands, the IDs we're passing in match those we passed in
+when creating the exercises previously.  Strictly speaking, the full IDs are
+`exercises/勉強.recognition` and `exercises/勉強.production` respectively, but
+since the `schedule` command only ever interacts with exercises and never data,
+we can drop the section name.
 
-    $ srs schedule -s SuperMemo2 884bd92624411f5bb42ff9abdf84c3e09ba00cab
+    $ srs schedule -s SuperMemo2 勉強.recognition
     schedule/pending/20120708003132.386
-    $ srs schedule -s SuperMemo2 d930b3fce3d2f988758c7088ea77d9075b8c82bf
+    $ srs schedule -s SuperMemo2 勉強.production
     schedule/pending/20120708003149.754
 
 ### Doing some reps -- new exercises
@@ -178,11 +180,11 @@ can get this from the `Exercise` field stored in the schedule (as always,
 remembering to substitute the example ID below with your own):
 
     $ srs get-field exercise 20120708003132.386
-    884bd92624411f5bb42ff9abdf84c3e09ba00cab
+    勉強.recognition
 
 An exercise ID will be output, which we can feed straight into `do-exercise`:
 
-    $ srs do-exercise a884bd92624411f5bb42ff9abdf84c3e09ba00cab
+    $ srs do-exercise 勉強.recognition
     勉強
     べんきょう
     >
