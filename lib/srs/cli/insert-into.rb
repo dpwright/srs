@@ -38,8 +38,8 @@ module SRS
 srs insert-into <section>
 
 Reads the contents from stdin and inserts it into the appropriate section in the
-workspace.  <section> can be one of "data", "exercise", or "schedule".  Returns
-the id used to access that exercise.
+workspace.  <section> can be one of "data" or "exercise".  Returns the id used
+to access that content.
 				EOF
 			end
 		end
