@@ -9,18 +9,16 @@ module SRS
 					return 3
 				end
 
-				sha1 = arguments.shift
-				if sha1 == nil then
+				id = arguments.shift
+				if id == nil then
 					return 4
 				end
 
-				sha1_start = sha1[0..1]
-				sha1_rest = sha1[2..-1]
-
-				datafile = "exercises/#{sha1_start}/#{sha1_rest}"
+				datafile = "#{id}"
+				datafile = "exercises/#{id}" if not File.exists?(datafile)
 
 				if not File.exists?(datafile) then
-					puts "No content with that ID exists"
+					puts "do-exercise: Cannot read exercise #{datafile}"
 					return 4
 				end
 
@@ -38,12 +36,12 @@ module SRS
 					metadata = file.read
 				end
 
-				runModel(sha1, headers, metadata)
+				runModel(datafile, headers, metadata)
 			end
 
-			def runModel(sha1, headers, metadata)
+			def runModel(datafile, headers, metadata)
 				if not headers.has_key?("Model") then
-					puts "Exercise #{sha1} has no model!\n"
+					puts "Exercise #{datafile} has no model!\n"
 					return nil
 				end
 
