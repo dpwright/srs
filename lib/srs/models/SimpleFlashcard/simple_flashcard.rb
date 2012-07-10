@@ -9,14 +9,10 @@ module SRS
 
 			def run(headers, metadata)
 				data = headers.delete("Data")
-
-				sha1_start = data[0..1]
-				sha1_rest = data[2..-1]
-
-				datafile = "data/#{sha1_start}/#{sha1_rest}"
+				datafile = "data/#{data}"
 
 				if not File.exists?(datafile) then
-					puts "No content with that ID exists"
+					puts "SimpleFlashcard: Cannot read data \"#{data}\""
 					return 4
 				end
 
