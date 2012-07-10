@@ -1,3 +1,4 @@
+require "rexml/document"
 require "stringio"
 
 module SRS
@@ -64,17 +65,18 @@ module SRS
 				return score
 			end
 
+			def format_textfield(text)
+				text.strip.gsub(/^[ \t]+/, "").gsub( "&nbsp;", " " ).gsub( "&tab;", "\t" )
+			end
+
+
 			def load(datafile)
 				@fields = {}
 				File.open(datafile, "r") do |file|
-					while( line = file.gets() ) do
-						if line.strip.empty? then
-							break
-						end
-
-						keyval = line.split(':').map{|e| e.strip}
-						key = keyval[0]
-						val = keyval[1]
+					xml = REXML::Document.new file
+					xml.elements.each("fields/*") do |e|
+						key = e.name
+						val = format_textfield(e.text)
 
 						@fields[key] = val
 					end
