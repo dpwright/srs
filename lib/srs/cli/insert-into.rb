@@ -4,33 +4,49 @@ module SRS
 	class CLI
 		class InsertInto
 			VALID_SECTIONS = ["data", "exercises"].freeze
+			def initialize
+				@options = {}
+				@opts = OptionParser.new do |o|
+					o.on('-f', '--force', 'Overwrite any existing content with the same id') do
+						@options[:force] = true
+					end
+				end
+			end
+
 			def run!(arguments)
+				begin
+					@opts.parse!(arguments)
+					@options[:section] = arguments.shift
+					@options[:id] = arguments.shift
+				rescue OptionParser::InvalidOption => e
+					@options[:invalid_argument] = e.message
+				end
+
 				if not SRS::Workspace.initialised? then
 					puts "Current directory is not an SRS Workspace"
 					return 3
 				end
 
-				section = arguments.shift()
-				if section == nil or !VALID_SECTIONS.include?(section) then
+				if @options[:section] == nil or !VALID_SECTIONS.include?(@options[:section]) then
 					help()
 					return 4
 				end
 
-				id = arguments.shift()
-				if id == nil then
+				if @options[:id] == nil then
 					help()
 					return 4
 				end
 
 				data = STDIN.read()
-				datafile = "#{section}/#{id}"
+				datafile = "#{@options[:section]}/#{@options[:id]}"
 
-				if File.exists?(datafile) then
-					puts "Content #{id} already exists in #{section}."
+				if File.exists?(datafile) and  not @options[:force] then
+					puts "Content #{@options[:id]} already exists in #{@options[:section]}."
+					puts "Use --force to overwrite it."
 					return 5
 				end
 
-				FileUtils::mkdir_p("#{section}")
+				FileUtils::mkdir_p("#{@options[:section]}")
 				File.open(datafile, 'w') {|f| f.write(data)}
 
 				puts datafile
@@ -47,6 +63,7 @@ workspace.  <section> can be one of "data" or "exercise".  <id> is the id you
 want to give to the content, local to that section.  Returns the absolute id
 used to access that content.
 				EOF
+				puts @opts
 			end
 		end
 	end
