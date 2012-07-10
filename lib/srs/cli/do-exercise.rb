@@ -10,6 +10,10 @@ module SRS
 				end
 
 				sha1 = arguments.shift
+				if sha1 == nil then
+					return 4
+				end
+
 				sha1_start = sha1[0..1]
 				sha1_rest = sha1[2..-1]
 

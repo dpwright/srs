@@ -10,6 +10,10 @@ module SRS
 				field = arguments.shift
 				id = arguments.shift
 
+				if field == nil or id == nil then
+					return 4
+				end
+
 				is_schedule = (id =~ /\d{14}\.\d{3}/)
 
 				filename = ""
