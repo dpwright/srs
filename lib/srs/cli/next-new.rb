@@ -7,7 +7,7 @@ module SRS
 					return 3
 				end
 
-				new_schedules = Dir["schedule/pending/*"].sort
+				new_schedules = Dir["schedule/pending/*"].sort_by{ |f| File.ctime(f) }
 				if not new_schedules.empty?
 					puts File.basename new_schedules.first
 				end

@@ -43,10 +43,10 @@ module SRS
 				end
 
 				t = Time.now
-				filename = "schedule/pending/#{t.strftime("%Y%m%d%H%M%S.%L")}"
+				filename = "schedule/pending/#{@options[:data]}.#{@options[:exercise]}"
 
 				if File.exists?(filename) then
-					puts "Cannot schedule two items within a millisecond.  Try again."
+					puts "#{@options[:data]}.#{@options[:exercise]} already scheduled!"
 					return 6
 				end
 
