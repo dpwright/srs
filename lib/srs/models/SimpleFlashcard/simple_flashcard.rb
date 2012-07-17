@@ -67,7 +67,6 @@ module SRS
 			def load(datafile)
 				@fields = {}
 				File.open(datafile, "r") do |file|
-					@fields = {}
 					Hash[*file.read.split(/^([^:\s][^:\n]*):/)[1..-1]].each{|k,v| @fields[k] = format_textfield v}
 				end
 			end
