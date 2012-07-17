@@ -161,9 +161,9 @@ when creating the exercises previously.  Strictly speaking, the full IDs are
 same order (exercise name first), we can drop the section name.
 
     $ srs schedule -s SuperMemo2 recognition 勉強
-    schedule/pending/20120708003132.386
+    schedule/pending/勉強.recognition
     $ srs schedule -s SuperMemo2 production 勉強
-    schedule/pending/20120708003149.754
+    schedule/pending/勉強.production
 
 ### Doing some reps -- new exercises
 
@@ -171,7 +171,7 @@ Now that you've scheduled some exercises, you're ready to do some reps.  Let's
 ask `srs` what the next new exercise is which is available for learning:
 
     $ srs next-new
-    20120708003132.386
+    勉強.recognition
 
 The ID of the first exercise you scheduled above should be output.  In order to
 actually test ourselves, we'll need the ID of the exercise we want to run and
@@ -179,9 +179,9 @@ the data we want to run it on.  We can get this from the `Exercise` and `Data`
 fields respectively, stored in the schedule (as always, remembering to
 substitute the example ID below with your own):
 
-    $ srs get-field exercise 20120708003132.386
+    $ srs get-field exercise 勉強.recognition
     recognition
-    $ srs get-field data 20120708003132.386
+    $ srs get-field data 勉強.recognition
     勉強
 
 The IDs will be output, which we can feed straight into `do-exercise`:
@@ -203,7 +203,7 @@ still need to enter this into the scheduler so that it knows when next to repeat
 the exercise.  Enter the following to reschedule the exercise.  The ID is the
 _schedule_ ID, not the one for the exercise:
 
-    $ srs reschedule 20120708003132.386 1.0
+    $ srs reschedule 勉強.recognition 1.0
     Exercise rescheduled for 2012-07-09 00:00:00 +0900
 
 Excellent!  We'll see this exercise again tomorrow.
