@@ -9,22 +9,35 @@ module SRS
 					return 3
 				end
 
-				id = arguments.shift
-				if id == nil then
+				exercise_id = arguments.shift
+				if exercise_id == nil then
 					return 4
 				end
 
-				datafile = "#{id}"
-				datafile = "exercises/#{id}" if not File.exists?(datafile)
+				exercisefile = "#{exercise_id}"
+				exercisefile = "exercises/#{exercise_id}" if not File.exists?(exercisefile)
+
+				if not File.exists?(exercisefile) then
+					puts "do-exercise: cannot read exercise #{exercisefile}"
+					return 4
+				end
+
+				data_id = arguments.shift
+				if data_id == nil then
+					return 4
+				end
+
+				datafile = "#{data_id}"
+				datafile = "data/#{data_id}" if not File.exists?(datafile)
 
 				if not File.exists?(datafile) then
-					puts "do-exercise: Cannot read exercise #{datafile}"
+					puts "do-exercise: Cannot read data #{datafile}"
 					return 4
 				end
 
 				headers = {}
 				metadata = ""
-				File.open(datafile, "r") do |file|
+				File.open(exercisefile, "r") do |file|
 					while( line = file.gets() ) do
 						if line.strip.empty? then
 							break
@@ -36,12 +49,12 @@ module SRS
 					metadata = file.read
 				end
 
-				runModel(datafile, headers, metadata)
+				runModel(exercisefile, headers, metadata, datafile)
 			end
 
-			def runModel(datafile, headers, metadata)
+			def runModel(exercisefile, headers, metadata, datafile)
 				if not headers.has_key?("Model") then
-					puts "Exercise #{datafile} has no model!\n"
+					puts "Exercise #{exercisefile} has no model!\n"
 					return nil
 				end
 
@@ -59,16 +72,16 @@ module SRS
 				end
 
 				model = SRS::Models.const_get(modelclass.to_sym).new
-				score = model.run(headers, metadata)
+				score = model.run(headers, metadata, datafile)
 
 				return score
 			end
 
 			def help()
 				puts <<-EOF
-srs do-exercise <id>
+srs do-exercise <exercise_id> <data_id>
 
-Runs the exercise defined in <id>
+Runs the exercise defined in <exercise_id> passing in the data from <data_id>
 					EOF
 			end
 		end

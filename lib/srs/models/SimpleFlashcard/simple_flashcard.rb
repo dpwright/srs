@@ -6,15 +6,7 @@ module SRS
 			def initialize()
 			end
 
-			def run(headers, metadata)
-				data = headers.delete("Data")
-				datafile = "data/#{data}"
-
-				if not File.exists?(datafile) then
-					puts "SimpleFlashcard: Cannot read data \"#{data}\""
-					return 4
-				end
-
+			def run(headers, metadata, datafile)
 				self.load(datafile)
 
 				score = 0.0

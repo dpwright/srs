@@ -7,7 +7,7 @@ module SRS
 				@options = {}
 				@opts = OptionParser.new do |o|
 					o.banner = <<-EOF.gsub /^\s+/, ""
-						srs schedule [options] <exercise>
+						srs schedule [options] <exercise> <data>
 
 						Schedules an exercise.
 						EOF
@@ -27,11 +27,12 @@ module SRS
 				begin
 					@opts.parse!(arguments)
 					@options[:exercise] = arguments.shift()
+					@options[:data] = arguments.shift()
 				rescue OptionParser::InvalidOption => e
 					@options[:invalid_argument] = e.message
 				end
 
-				if @options[:exercise] == nil then
+				if @options[:exercise] == nil or @options[:data] == nil then
 					help()
 					return 4
 				end
@@ -52,6 +53,7 @@ module SRS
 				FileUtils::mkdir_p("schedule/pending")
 				File.open(filename, 'w') do |f|
 					f.puts "Exercise: #{@options[:exercise]}"
+					f.puts "Data: #{@options[:data]}"
 					f.puts "Scheduler: #{@options[:scheduler]}"
 				end
 
