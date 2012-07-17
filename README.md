@@ -72,9 +72,10 @@ A `SimpleFlashcard` exercise comes in two parts:
  * The _data_, which usually contains the actual thing you want to test
  * The _exercise specification_, which determines how to use that data.
 
-This separation allows you to use the same data for multiple exercises.  In this
-example, we're going to create a "Production" and a "Recognition" card for the
-Japanese word, 勉強, which means "study".
+This separation allows you to use the same data for multiple exercises, or use
+the same exercise specification for lots of different data.  In this example,
+we're going to create a "Production" and a "Recognition" card for the Japanese
+word, 勉強, which means "study".
 
 The first thing we need to do is create the DataFile.  `SimpleFlashcard`
 expects its data to consist of a series of key-value pairs, separated by a
@@ -103,15 +104,14 @@ generate two; one to produce the English meaning when shown the word and the
 pronunciation; the other to produce the Japanese word when shown the English.
 Input the following:
 
-    $ srs insert-into exercises 勉強.recognition
-    Data: 勉強
+    $ srs insert-into exercises recognition
     Model: SimpleFlashcard
 
     [Word]
     [Pronunciation (Hiragana)]
     ---
     [Meaning]
-    ^Dexercises/勉強.recognition
+    ^Dexercises/recognition
 
 Note the blank line between the set of key-value pairs and the text below.
 `SimpleFlashcard` expects a series of headers, followed by a blank line,
@@ -123,14 +123,13 @@ of their corresponding field in the data.
 As with the previous command, this command outputs the absolute ID once it has
 completed.  Let's add the second exercise:
 
-    $ srs insert-into exercises 勉強.production
-    Data: 勉強
+    $ srs insert-into exercises production
     Model: SimpleFlashcard
 
     [Meaning]
     ---
     [Word]
-    ^Dexercises/勉強.production
+    ^Dexercises/production
 
 As you can see, this is just the same exercise, with the question and answer
 reversed.  Also, we are ignoring pronunciation for this one.
@@ -146,7 +145,7 @@ discovered the information).
 
 The next thing we must do is schedule the exercises we've just created.  If we
 don't do this, they will never enter the `srs` scheduling system, and so they
-will simply sit there unasked!
+will simply sit there untested!
 
 There have been a number of spaced repetition algorithms developed over the
 years, perhaps the most famous of which are the [Pimsleur Graduated Recall][4]
@@ -157,13 +156,13 @@ pre-installed, SuperMemo 2.  We'll use that one.
 
 In the following two commands, the IDs we're passing in match those we passed in
 when creating the exercises previously.  Strictly speaking, the full IDs are
-`exercises/勉強.recognition` and `exercises/勉強.production` respectively, but
-since the `schedule` command only ever interacts with exercises and never data,
-we can drop the section name.
+`exercises/recognition` and `exercises/production` respectively, but since the
+`schedule` command always expects the exercise and data fields to come in the
+same order (exercise name first), we can drop the section name.
 
-    $ srs schedule -s SuperMemo2 勉強.recognition
+    $ srs schedule -s SuperMemo2 recognition 勉強
     schedule/pending/20120708003132.386
-    $ srs schedule -s SuperMemo2 勉強.production
+    $ srs schedule -s SuperMemo2 production 勉強
     schedule/pending/20120708003149.754
 
 ### Doing some reps -- new exercises
@@ -175,16 +174,19 @@ ask `srs` what the next new exercise is which is available for learning:
     20120708003132.386
 
 The ID of the first exercise you scheduled above should be output.  In order to
-actually test ourselves, we'll need the ID of the exercise we want to run.  We
-can get this from the `Exercise` field stored in the schedule (as always,
-remembering to substitute the example ID below with your own):
+actually test ourselves, we'll need the ID of the exercise we want to run and
+the data we want to run it on.  We can get this from the `Exercise` and `Data`
+fields respectively, stored in the schedule (as always, remembering to
+substitute the example ID below with your own):
 
     $ srs get-field exercise 20120708003132.386
-    勉強.recognition
+    recognition
+    $ srs get-field data 20120708003132.386
+    勉強
 
-An exercise ID will be output, which we can feed straight into `do-exercise`:
+The IDs will be output, which we can feed straight into `do-exercise`:
 
-    $ srs do-exercise 勉強.recognition
+    $ srs do-exercise recognition 勉強
     勉強
     べんきょう
     >
@@ -209,7 +211,7 @@ Excellent!  We'll see this exercise again tomorrow.
 It's actually possible to wrap up most of the above in a single line.  The
 following assumes you use a `bash` shell, though other shells may be similar:
 
-    $ SCHEDULE=$(srs next-new); EXERCISE=$(srs get-field exercise $SCHEDULE); srs do-exercise $EXERCISE
+    $ SCHEDULE=$(srs next-new); EXERCISE=$(srs get-field exercise $SCHEDULE); DATA=$(srs get-field data $SCHEDULE); srs do-exercise $EXERCISE $DATA
 
 This time we'll try answering the question incorrectly:
 
@@ -250,7 +252,7 @@ This command tells `srs` to look through the schedules and determine which
 exercises are due for practice.  We can now use `next-due` similarly to the
 way we practised new exercises in the previous section:
 
-    $ SCHEDULE=$(srs next-due); EXERCISE=$(srs get-field exercise $SCHEDULE); srs do-exercise $EXERCISE
+    $ SCHEDULE=$(srs next-due); EXERCISE=$(srs get-field exercise $SCHEDULE); DATA=$(srs get-field data $SCHEDULE); srs do-exercise $EXERCISE $DATA
     Study
     > 勉強
     Correct.
