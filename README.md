@@ -77,18 +77,18 @@ example, we're going to create a "Production" and a "Recognition" card for the
 Japanese word, 勉強, which means "study".
 
 The first thing we need to do is create the DataFile.  `SimpleFlashcard`
-currently expects its data in an XML format, with a root `<fields>` node
-containing an element with the text for each field.  Run the following from
-inside the workspace directory you created (The ^D at the end signifies pressing
-Control-D to send the end-of-file marker to `srs`):
+expects its data to consist of a series of key-value pairs, separated by a
+colon.  Lines beginning with a colon (:) or whitespace are considered to be
+continuations of the previous line.
+
+Run the following from inside the workspace directory you created (The ^D at the
+end signifies pressing Control-D to send the end-of-file marker to `srs`):
 
     $ srs insert-into data 勉強
-    <fields>
-    	<Word>勉強</Word>
-    	<Pronunciation_Hiragana>べんきょう</Pronunciation_Hiragana>
-    	<Pronunciation_Romaji>Benkyou</Pronunciation_Romaji>
-    	<Meaning>Study</Meaning>
-    </fields>
+    Word: 勉強
+    Pronunciation (Hiragana): べんきょう
+    Pronunciation (Romaji): Benkyou
+    Meaning: Study
     ^Ddata/勉強
 
 You should see the output after pressing ^D as above, `data/勉強`.  The
@@ -108,7 +108,7 @@ Input the following:
     Model: SimpleFlashcard
 
     [Word]
-    [Pronunciation_Hiragana]
+    [Pronunciation (Hiragana)]
     ---
     [Meaning]
     ^Dexercises/勉強.recognition
@@ -135,7 +135,7 @@ completed.  Let's add the second exercise:
 As you can see, this is just the same exercise, with the question and answer
 reversed.  Also, we are ignoring pronunciation for this one.
 
-You will notice, neither of these exercises make use of the "Pronunciation_Romaji"
+You will notice, neither of these exercises make use of the "Pronunciation (Romaji)"
 field.  The truth is, I don't much like Romaji.  But it is entirely reasonable
 to add fields you won't use as part of the exercises to the data; you may choose
 to create exercises which make use of that data later, or you may just want to
